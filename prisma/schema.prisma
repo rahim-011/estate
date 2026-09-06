@@ -1,0 +1,312 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model user {
+  id            String        @id @default(cuid())
+  name          String
+  email         String        @unique
+  emailVerified Boolean
+  image         String?
+  twoFactorEnabled Boolean? @default(false)
+  createdAt     DateTime      @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime      @default(now()) @db.Timestamptz(6)
+  location      String?
+  role          String        @default("user")
+  banned        Boolean?      @default(false)
+  banReason     String?
+  banExpires    DateTime?     @db.Timestamptz(6)
+  properties    Property[]
+  Tour          Tour[]
+  contactInfo   User_Contact?
+  accounts      account[]
+  sessions      session[]
+  twoFactor     twoFactor?
+}
+
+model User_Contact {
+  id                     String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId                 String                   @unique
+  email                  String
+  phone                  String?
+  preferredContactMethod PreferredContactMethods? @default(email)
+  created_at             DateTime?                @default(now()) @db.Timestamptz(6)
+  updated_at             DateTime?                @default(now()) @db.Timestamptz(6)
+  user                   user                     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime? @db.Timestamptz(6)
+  refreshTokenExpiresAt DateTime? @db.Timestamptz(6)
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt             DateTime  @db.Timestamptz(6)
+  issuer                String?
+  user                  user      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([userId])
+}
+
+model session {
+  id        String   @id
+  expiresAt DateTime @db.Timestamptz(6)
+  token     String   @unique
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @db.Timestamptz(6)
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([userId])
+}
+
+model verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime @db.Timestamptz(6)
+  createdAt  DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([identifier])
+}
+
+model Key_Features {
+  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  airConditioning   Boolean?  @default(false)
+  petFriendly       Boolean?  @default(false)
+  smartHomeFeatures Boolean?  @default(false)
+  inUnitLaundry     Boolean?  @default(false)
+  pool              Boolean?  @default(false)
+  walkInClosets     Boolean?  @default(false)
+  balconyPatio      Boolean?  @default(false)
+  firePlace         Boolean?  @default(false)
+  securitySystem    Boolean?  @default(false)
+  property_id       String    @unique @db.Uuid
+  created_at        DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime? @default(now()) @db.Timestamptz(6)
+  Property          Property  @relation(fields: [property_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model Media {
+  id                  String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  photosSrcs          String[]
+  videoUrl            String?
+  virtualTourVideoUrl String?
+  property_id         String    @unique @db.Uuid
+  created_at          DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime? @default(now()) @db.Timestamptz(6)
+  Property            Property  @relation(fields: [property_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model Property {
+  id               String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name             String            @db.VarChar(100)
+  wilaya           Wilaya
+  price            Decimal           @db.Decimal(10, 2)
+  propertyType     PropertyTypes
+  address          String            @db.VarChar(100)
+  listingType      ListingTypes
+  created_at       DateTime?         @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime?         @default(now()) @db.Timestamptz(6)
+  seller_id        String
+  status           PropertieStatuses @default(pending)
+  Key_Features     Key_Features?
+  Media            Media?
+  seller           user              @relation(fields: [seller_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  Property_Details Property_Details?
+  Tour             Tour[]
+
+  @@index([wilaya])
+  @@index([wilaya, status])
+  @@index([created_at])
+}
+
+model Property_Details {
+  id          String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  property_id String             @unique @db.Uuid
+  bedRooms    Int
+  bathRooms   Int
+  builtYear   Int
+  areaSurface Int
+  lotSize     Int?
+  furnishing  FurnishingOptions?
+  parkingType ParkingTypes       @default(garage)
+  description String
+  created_at  DateTime?          @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime?          @default(now()) @db.Timestamptz(6)
+  Property    Property           @relation(fields: [property_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model Contacts {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String    @db.VarChar(50)
+  email      String    @db.VarChar(100)
+  phone      String    @db.VarChar(50)
+  message    String
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+model Agent {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String    @db.VarChar(50)
+  email      String    @unique @db.VarChar(100)
+  phone      String    @unique @db.VarChar(100)
+  location   String    @default("Global") @db.VarChar(50)
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at DateTime? @default(now()) @db.Timestamptz(6)
+  image      String?
+  Tour       Tour[]
+}
+
+model Tour {
+  id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  status       ToursStatuses @default(pending)
+  type         TourTypes?    @default(inPerson)
+  property_id  String        @db.Uuid
+  agent_id     String        @db.Uuid
+  user_id      String
+  scheduled_at DateTime      @db.Timestamptz(6)
+  created_at   DateTime?     @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime?     @default(now()) @db.Timestamptz(6)
+  Agent        Agent         @relation(fields: [agent_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  Property     Property      @relation(fields: [property_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user         user          @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model twoFactor {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id    String    @unique
+  is_enabled Boolean   @default(false)
+  secret     String    @db.VarChar(100)
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at DateTime? @default(now()) @db.Timestamptz(6)
+  user       user      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+enum FurnishingOptions {
+  fullyFurnished
+  unfurnished
+  semiFurnished
+}
+
+enum ListingTypes {
+  sale
+  rent
+}
+
+enum PropertyTypes {
+  singleFamily
+  townHouse
+  apartment
+  land
+  all
+}
+
+enum PreferredContactMethods {
+  phone
+  sms
+  whatsApp
+  email
+}
+
+enum PropertieStatuses {
+  active
+  pending
+  expired
+}
+
+enum TourTypes {
+  inPerson
+  videoCall
+}
+
+enum ToursStatuses {
+  confirmed
+  completed
+  pending
+  cancelled
+}
+
+enum ParkingTypes {
+  garage
+  coveredParking
+  streetParking
+  driveWay
+  carPort
+  noParking
+}
+
+enum Wilaya {
+  adrar
+  chlef
+  laghouat
+  oum_el_bouaghi
+  batna
+  bejaia
+  biskra
+  bechar
+  blida
+  bouira
+  tamanrasset
+  tebessa
+  tlemcen
+  tiaret
+  tizi_ouzou
+  alger
+  djelfa
+  jijel
+  setif
+  saida
+  skikda
+  sidi_bel_abbes
+  annaba
+  guelma
+  constantine
+  medea
+  mostaganem
+  msila
+  mascara
+  ouargla
+  oran
+  el_bayadh
+  illizi
+  bordj_bou_arreridj
+  boumerdes
+  el_tarf
+  tindouf
+  tissemsilt
+  el_oued
+  khenchela
+  souk_ahras
+  tipaza
+  mila
+  ain_defla
+  naama
+  ain_temouchent
+  ghardaia
+  relizane
+  timimoun
+  bordj_badji_mokhtar
+  ouled_djellal
+  beni_abbes
+  in_salah
+  in_guezzam
+  touggourt
+  djanet
+  el_mghair
+  el_meniaa
+}
