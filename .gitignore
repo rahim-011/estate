@@ -42,3 +42,8 @@ next-env.d.ts
 
 /lib/generated/prisma
 .env
+.agents/
+.claude/
+.windsurf/
+AGENTS.md
+CLAUDE.md
