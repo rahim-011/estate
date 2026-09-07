@@ -1,6 +1,7 @@
 import { rockSalt } from "@/lib/fonts";
 import SignUpForm from "@/components/SignUpForm";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function SignUp() {
     return (
@@ -14,12 +15,12 @@ export default function SignUp() {
             />
             <div className="absolute inset-0 bg-black/15 -z-10" />
 
-            <div 
-                className={`${rockSalt.className} absolute top-6 left-6 sm:top-8 sm:left-8 text-2xl sm:text-3xl font-bold text-white tracking-wide select-none z-10`}
+            <Link 
+                href='/' className={`${rockSalt.className} absolute top-6 left-6 sm:top-8 sm:left-8 text-2xl sm:text-3xl font-bold text-white tracking-wide select-none z-10 cursor-pointer`}
                 
             >
                 ESTATEA
-            </div>
+            </Link>
 
             <div className="z-10 w-full flex justify-center mt-12 sm:mt-0">
                 <SignUpForm/>
