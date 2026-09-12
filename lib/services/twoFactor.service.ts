@@ -169,6 +169,8 @@ export const getTwoFactorStatus = async (userEmail:string) =>{
         }
     }
     catch(error){
+            console.error('TWO_FACTOR_ERROR:', JSON.stringify(error, Object.getOwnPropertyNames(error)));
+
         return {
             success:false,
             error:'Internal server error',
