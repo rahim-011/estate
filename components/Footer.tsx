@@ -1,24 +1,18 @@
 import { rockSalt } from "@/lib/fonts"
-import { scrollToTop } from "@/lib/utils"
 import Link from "next/link"
 
 export default function Footer() {
     const quickLinks = [
         { title: 'Home', src: '/' },
-        { title: 'Courses', src: '/courses' },
         { title: 'About Us', src: '/about' },
-        { title: 'Blog', src: '/blog' },
         { title: 'Contact', src: '/contact' }
     ]
 
     const supportLinks = [
-        { title: 'Help center', src: '/help-center' },
-        { title: 'FAQs', src: '/faqs' },
-        { title: 'Terms of Service', src: '/terms' },
-        { title: 'Privacy Policy', src: '/privacy' },
-        { title: 'Report a Problem', src: '/report' }
+        { title: 'Rent Property', src: '/rent' },
+        { title: 'Buy Property', src: '/buy' },
+        { title: 'Sell Property', src: '/sell' }
     ]
-
 
     return (
         <footer className="w-full bg-[#1d7b87] text-white py-12 px-6 md:px-16 lg:px-24 mt-10 bottom-0 left-0 right-0">
@@ -41,7 +35,7 @@ export default function Footer() {
                         </div>
 
                         <div className="flex flex-col gap-3">
-                            <h3 className="text-white font-semibold text-sm md:text-base">Support</h3>
+                            <h3 className="text-white font-semibold text-sm md:text-base">Properties</h3>
                             <div className="flex flex-col gap-2.5">
                                 {supportLinks.map((link, index) => (
                                     <Link key={index} href={link.src} className="text-white/80 font-normal text-xs md:text-sm hover:text-white transition-colors">
