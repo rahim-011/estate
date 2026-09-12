@@ -1,6 +1,6 @@
 import PropertyReview from "@/components/PropertyView";
 
-
+export const dynamic = 'force-dynamic';
 
 export default async function RentProperty({params}:{params:Promise<{id:string}>}){
     const id = (await params).id;
