@@ -162,7 +162,8 @@ export type ListingInfos = Awaited <
 
 
 export async function getPropertyDetails(id:string){
-    if (!id){
+    try{
+        if (!id){
         return {}
     }
     const propertyDetails = await prisma.property.findUnique({
@@ -195,6 +196,14 @@ export async function getPropertyDetails(id:string){
     }
     return {
         propertyDetails:formattedPropertyDetails
+    }
+    }
+    catch(error){
+        console.log('get Property details error:',error)
+        return{
+            success:false,
+            error:'Internal server error'
+        }
     }
 }
 
