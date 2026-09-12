@@ -2,7 +2,7 @@
 import type { Metadata } from "next";
 import {  Inter } from "next/font/google";
 import "./globals.css";
-
+import SplashScreen from "@/components/SplashScreen";
 
 const inter = Inter({
   subsets:['latin'],
@@ -24,7 +24,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${inter.className} h-full antialiased`}
     >
       <body className="min-h-screen flex flex-col" suppressHydrationWarning>
-        {children}
+       <SplashScreen>{children}</SplashScreen>
       </body>
     </html>
   );
