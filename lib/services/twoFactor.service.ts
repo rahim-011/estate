@@ -164,7 +164,7 @@ export const getTwoFactorStatus = async (userEmail:string) =>{
             }
         })
         return{
-            success:false,
+            success:true,
             isEnabled:currentUser?.twoFactor?.is_enabled
         }
     }
