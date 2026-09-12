@@ -1,5 +1,6 @@
 'use server'
 
+import { prisma } from '../prisma'
 import QRCode from 'qrcode'
 import { verifyUserSession } from "./user.service"
 import {generateSecret,generateURI,verify} from 'otplib'
