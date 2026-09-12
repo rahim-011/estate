@@ -1,12 +1,13 @@
 'use client'
 
 import { BlockScroll, cn } from "@/lib/utils"
-import { Heart } from "lucide-react"
 import Image from "next/image"
 import { useState } from "react"
 import RequestTourModal from "./TourModel"
 import { AgentsList } from "@/lib/services/agent.service"
 import { ListingInfos } from "@/lib/services/property.service"
+import { authClient } from "@/lib/auth-client"
+import { useRouter } from "next/navigation"
 
 type PropertyDetailsHeroProps = {
     agents: AgentsList
@@ -15,6 +16,7 @@ type PropertyDetailsHeroProps = {
 
 export default function PropertyDetailsHero({ agents, requestedProperty }: PropertyDetailsHeroProps) {
     const photosSrcs = requestedProperty.Media?.photosSrcs;
+    const router = useRouter();
 
     if (!photosSrcs || photosSrcs.length === 0) {
         return null;
@@ -25,6 +27,7 @@ export default function PropertyDetailsHero({ agents, requestedProperty }: Prope
 
     const photosLength = photosSrcs.length;
     const gridClass = cn(photosLength > 2 ? 'grid-cols-2' : 'grid-cols-1');
+    const {data:session} = authClient.useSession();
 
     return (
         <div className="flex flex-col gap-8">
@@ -68,7 +71,7 @@ export default function PropertyDetailsHero({ agents, requestedProperty }: Prope
     
                 <button 
                     className="bg-primary hover:brightness-110 text-white font-semibold rounded-lg px-5 py-3 cursor-pointer transition-all self-start w-48" 
-                    onClick={() => setIsOpen(true)}
+                    onClick={() => {session ? setIsOpen(true) : router.push('/sign-in'),{scroll:false}}}
                 >
                     Book tour
                 </button>

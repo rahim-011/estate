@@ -24,7 +24,6 @@ export function PropertyViewModal({ isOpen, onClose, property }: PropertyViewMod
         className="relative w-full max-w-lg bg-white rounded-3xl border border-slate-100 shadow-2xl overflow-hidden flex flex-col max-h-[88vh] animate-in fade-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Floating Top Close Action */}
         <button
           onClick={onClose}
           aria-label="Close modal"
@@ -33,7 +32,6 @@ export function PropertyViewModal({ isOpen, onClose, property }: PropertyViewMod
           ✕
         </button>
 
-        {/* Hero Image / Banner */}
         <div className="relative h-52 sm:h-60 w-full bg-slate-100 flex-shrink-0 overflow-hidden">
           {displayImage ? (
             <Image
@@ -53,7 +51,6 @@ export function PropertyViewModal({ isOpen, onClose, property }: PropertyViewMod
             </div>
           )}
 
-          {/* Floating Badges */}
           <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
             <span className="bg-white/95 backdrop-blur-md text-slate-800 text-[11px] font-semibold px-3 py-1 rounded-full border border-slate-200/80 shadow-xs uppercase tracking-wider">
               {property.status}
@@ -68,10 +65,8 @@ export function PropertyViewModal({ isOpen, onClose, property }: PropertyViewMod
           </div>
         </div>
 
-        {/* Content Container */}
         <div className="p-6 sm:p-7 space-y-6 overflow-y-auto bg-white text-slate-900">
           
-          {/* Main Title & Price Header */}
           <div className="space-y-2 border-b border-slate-100 pb-5">
             <div className="flex items-baseline justify-between gap-2">
               <div className="flex items-baseline gap-1.5">
@@ -94,7 +89,6 @@ export function PropertyViewModal({ isOpen, onClose, property }: PropertyViewMod
             </p>
           </div>
 
-          {/* Key Amenities Grid */}
           <div className="grid grid-cols-3 gap-3">
             <div className="bg-slate-50/80 border border-slate-100 p-3.5 rounded-2xl flex flex-col items-center justify-center text-center gap-1">
               <span className="text-base font-bold text-slate-900">
