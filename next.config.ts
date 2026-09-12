@@ -13,7 +13,7 @@ const nextConfig = {
       },
     ],
   },
-  output: process.env.DOCKER_BUILD ? 'standalone' : undefined,
+  output: process.env.VERCEL ? undefined : 'standalone',
 };
 
 module.exports = nextConfig; 
