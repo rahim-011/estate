@@ -7,7 +7,6 @@ import { verifyUserSession } from "./user.service"
 
 export const getAgents = async () =>{
     try{
-        const session = await verifyUserSession();
         const agents = await prisma?.agent.findMany({
             select:{
                 id:true,
