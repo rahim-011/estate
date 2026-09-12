@@ -1,7 +1,6 @@
 'use server'
 
-import { verifyUserSession } from "./user.service"
-
+import {prisma} from '../prisma'
 
 
 
