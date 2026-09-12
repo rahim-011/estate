@@ -13,7 +13,8 @@ const nextConfig = {
       },
     ],
   },
-  // output: 'standalone'
+  output: process.env.VERCEL ? undefined : 'standalone',
+  serverExternalPackages: ['@prisma/client'],
 };
 
 module.exports = nextConfig; 
