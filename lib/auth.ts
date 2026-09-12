@@ -50,6 +50,10 @@ const userRole = ac.newRole({
 
 export const auth = betterAuth({
   database: pool,
+  trustedOrigins: [
+    process.env.NEXT_PUBLIC_APP_URL || "",
+    "https://*.vercel.app", 
+  ],
   plugins:[
     admin({
       ac,
