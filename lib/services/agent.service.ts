@@ -28,6 +28,7 @@ export const getAgents = async () =>{
         }
     }   
     catch(error){
+        console.error('getAgents failed:', error);
         return {
             success:false,
             error:'Internal server error'

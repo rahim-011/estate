@@ -52,7 +52,8 @@ type FilterParams = {
 
 
 export async function getAllListings(params:FilterParams){
-    const limit = 10;
+    try{
+        const limit = 10;
     const currentPage = Math.max(params?.page || 1, 1);
     const skip = (currentPage - 1) * limit;
     const isValidWilaya = (value:string) =>{
@@ -144,6 +145,11 @@ export async function getAllListings(params:FilterParams){
         pageListings:formattedListings,
         totalPages,
         currentPage
+    }
+    }
+    catch(error){
+        console.error('getAllListings failed:', error);
+    throw error;
     }
 }
 
