@@ -1,6 +1,5 @@
 'use client'
 
-
 import { resetPasswordSchema } from "@/schemas/userSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
@@ -15,12 +14,7 @@ import { resetUserPassword } from "@/lib/services/resetPassword.service";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 
-
-
-
-
 export type ResetPasswordValues = z.infer<typeof resetPasswordSchema>;
-    
 
 export default function ResetPasswordForm(){
     const [errorMsg,setErrMsg] = useState('');
@@ -52,10 +46,10 @@ export default function ResetPasswordForm(){
             setErrMsg('Something went wrong');
         }
     }
+
     return(
         <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 bg-gray-50/50">
-            <div className="w-full max-w-4xl bg-white border border-gray-200 rounded-2xl shadow-xl flex">
-                
+            <div className="w-full max-w-4xl bg-white border border-gray-200 rounded-2xl shadow-xl flex flex-col lg:flex-row overflow-hidden">
                 <div className="w-full lg:w-1/2 relative bg-gray-100 h-48 sm:h-64 lg:h-auto min-h-[200px]">
                     <Image
                         src="/image/resetpasswordImg.webp"
@@ -67,23 +61,23 @@ export default function ResetPasswordForm(){
                     />
                 </div>
 
-                <div className="w-full md:w-1/2 p-8 md:p-5 sm:p-12 md:py-16 flex flex-col justify-center">
+                <div className="w-full lg:w-1/2 p-6 sm:p-8 lg:p-12 flex flex-col justify-center">
                     <Link
                         href="/verify-code"
-                        className="inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-black mb-8 transition-colors w-fit"
+                        className="inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-black mb-6 sm:mb-8 transition-colors w-fit"
                     >
                         <ArrowLeft size={18} />
                         <span>Back</span>
                     </Link>
 
-                    <div className="mb-8">
-                        <h1 className="text-3xl whitespace-nowrap md:text-[1.6rem] font-bold text-gray-900 mb-3">Create New Password</h1>
-                        <p className="text-base text-gray-600 leading-relaxed">
+                    <div className="mb-6 sm:mb-8">
+                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-3">Create New Password</h1>
+                        <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
                             Your new password must be different from previously used passwords.
                         </p>
                     </div>
 
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5 sm:gap-6">
                         <div className="flex flex-col gap-2">
                             <label htmlFor="password" className="text-sm font-semibold text-gray-700">
                                 New Password
@@ -101,7 +95,7 @@ export default function ResetPasswordForm(){
                                                 id="password"
                                                 type="password"
                                                 placeholder="••••••••"
-                                                className={`w-full pl-11 pr-4 py-3.5 rounded-xl border text-sm outline-none transition-all ${
+                                                className={`w-full pl-11 pr-4 py-3 sm:py-3.5 rounded-xl border text-sm outline-none transition-all ${
                                                     fieldState.invalid
                                                         ? "border-red-500 focus:ring-2 focus:ring-red-200"
                                                         : "border-gray-300 focus:border-teal-700 focus:ring-2 focus:ring-teal-700/20"
@@ -131,7 +125,7 @@ export default function ResetPasswordForm(){
                                                 id="confirmPassword"
                                                 type="password"
                                                 placeholder="••••••••"
-                                                className={`w-full pl-11 pr-4 py-3.5 rounded-xl border text-sm outline-none transition-all ${
+                                                className={`w-full pl-11 pr-4 py-3 sm:py-3.5 rounded-xl border text-sm outline-none transition-all ${
                                                     fieldState.invalid
                                                         ? "border-red-500 focus:ring-2 focus:ring-red-200"
                                                         : "border-gray-300 focus:border-teal-700 focus:ring-2 focus:ring-teal-700/20"
@@ -139,7 +133,7 @@ export default function ResetPasswordForm(){
                                             />
                                         </div>
                                         {fieldState.invalid && (
-                                            <FieldError errors={[fieldState.error]} className="!text-red-500 text-["/>
+                                            <FieldError errors={[fieldState.error]} className="text-red-500 text-[0.8rem]"/>
                                         )}
                                     </>
                                 )}
@@ -149,7 +143,7 @@ export default function ResetPasswordForm(){
                         <button
                             type="submit"
                             disabled={form.formState.isSubmitting}
-                            className="w-full mt-4 py-4 px-4 bg-teal-800 hover:bg-teal-900 text-white font-medium text-base rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 cursor-pointer"
+                            className="w-full mt-2 sm:mt-4 py-3.5 px-4 bg-teal-800 hover:bg-teal-900 text-white font-medium text-sm sm:text-base rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 cursor-pointer"
                         >
                             {form.formState.isSubmitting ? (
                                 <>

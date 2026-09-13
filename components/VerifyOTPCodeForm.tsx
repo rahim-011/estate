@@ -1,7 +1,5 @@
 'use client'
 
-
-
 import { otpCodeSchema } from "@/schemas/userSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
@@ -71,8 +69,7 @@ export default function VerifyOTPCodeForm(){
 
     return(
         <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 bg-gray-50/50">
-            <div className="w-full max-w-4xl bg-white border border-gray-200 rounded-2xl shadow-xl flex overflow-hidden">
-                
+            <div className="w-full max-w-4xl bg-white border border-gray-200 rounded-2xl shadow-xl flex flex-col lg:flex-row overflow-hidden">
                 <div className="w-full lg:w-1/2 relative bg-gray-100 h-48 sm:h-64 lg:h-auto min-h-[200px]">
                     <Image
                         src="/image/resetpasswordImg.webp"
@@ -84,23 +81,23 @@ export default function VerifyOTPCodeForm(){
                     />
                 </div>
 
-                <div className="w-full md:w-1/2 p-8 md:p-5 sm:p-12 md:py-16 flex flex-col justify-center">
+                <div className="w-full lg:w-1/2 p-6 sm:p-8 lg:p-12 flex flex-col justify-center">
                     <Link
                         href="/forgot-password"
-                        className="inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-black mb-8 transition-colors w-fit"
+                        className="inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-black mb-6 sm:mb-8 transition-colors w-fit"
                     >
                         <ArrowLeft size={18} />
                         <span>Back</span>
                     </Link>
 
-                    <div className="mb-8">
-                        <h1 className="text-3xl whitespace-nowrap md:text-[1.6rem] font-bold text-gray-900 mb-3">Enter Verification Code</h1>
-                        <p className="text-base text-gray-600 leading-relaxed">
+                    <div className="mb-6 sm:mb-8">
+                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-3">Enter Verification Code</h1>
+                        <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
                             Check your email inbox. Enter the 6-digit verification code sent to you.
                         </p>
                     </div>
 
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5 sm:gap-6">
                         <div className="flex flex-col gap-2">
                             <label htmlFor="otpCode" className="text-sm font-semibold text-gray-700">
                                 OTP Code
@@ -119,7 +116,7 @@ export default function VerifyOTPCodeForm(){
                                                 type="text"
                                                 maxLength={6}
                                                 placeholder="000000"
-                                                className={`w-full pl-11 pr-4 py-3.5 rounded-xl border text-sm outline-none transition-all tracking-widest font-mono ${
+                                                className={`w-full pl-11 pr-4 py-3 sm:py-3.5 rounded-xl border text-sm outline-none transition-all tracking-widest font-mono ${
                                                     fieldState.invalid
                                                         ? "border-red-500 focus:ring-2 focus:ring-red-200"
                                                         : "border-gray-300 focus:border-teal-700 focus:ring-2 focus:ring-teal-700/20"
@@ -138,7 +135,7 @@ export default function VerifyOTPCodeForm(){
                             <button
                                 type="submit"
                                 disabled={isSubmitting || !isDirty}
-                                className="w-full py-4 px-4 bg-teal-800 hover:bg-teal-900 text-white font-medium text-base rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 cursor-pointer"
+                                className="w-full py-3.5 px-4 bg-teal-800 hover:bg-teal-900 text-white font-medium text-sm sm:text-base rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 cursor-pointer"
                             >
                                 {isSubmitting ? (
                                     <>
