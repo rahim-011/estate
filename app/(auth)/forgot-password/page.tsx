@@ -12,7 +12,6 @@ import { generateResetPasswordOtpCode } from "@/lib/services/resetPassword.servi
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { setErrorMap } from "zod/v3";
 
 export type ForgotPasswordValue = z.infer<typeof forgotPasswordSchema>;
 

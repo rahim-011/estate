@@ -5,9 +5,9 @@ import { forgotPasswordSchema, otpCodeSchema, resetPasswordSchema } from "@/sche
 import crypto from 'crypto'
 import { sendResetPasswordEmail } from "../mail";
 import {prisma} from '../prisma'
-import { VerifyCodeValue } from "@/app/(auth)/verify-code/page";
+import { VerifyCodeValue } from "@/components/VerifyOTPCodeForm";
 import { auth } from "../auth";
-import { ResetPasswordValues } from "@/app/(auth)/reset-password/page";
+import { ResetPasswordValues } from "@/components/ResetPasswordForm";
 import bcrypt from  'bcryptjs'
 import { cleanUserCache } from "./user.service";
 
