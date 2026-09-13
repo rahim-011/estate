@@ -6,24 +6,65 @@ import { useForm, Controller } from "react-hook-form";
 import z from "zod";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, KeyRound, Loader2 } from "lucide-react";
+import { ArrowLeft, KeyRound, Loader2, RefreshCcw } from "lucide-react";
 import { FieldError } from "@/components/ui/field";
 import { Input } from "@base-ui/react";
+import { toast } from "sonner";
+import { generateResetPasswordOtpCode, verifyResetPasswordOtpCode } from "@/lib/services/resetPassword.service";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 
-
-type VerifyCodeValue = z.infer<typeof otpCodeSchema>;
+export type VerifyCodeValue = z.infer<typeof otpCodeSchema>;
 
 export default function VerifyCode(){
-
+    const [errorMsg,setErrMsg] = useState('');
+    const [isResending, setIsResending] = useState(false);
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const userEmail  = searchParams.get('email');
+    if (!userEmail){
+        return null
+    }
     const form = useForm({
         resolver: zodResolver(otpCodeSchema),
         defaultValues:{
             otpCode: ''
         }
     })
-
+    const {formState:{isDirty,isSubmitting}} = form;
     const onSubmit = async(value: VerifyCodeValue) =>{
-        
+        const toastId = toast.loading('Verifying your OTP code...');
+        try{
+            const res = await verifyResetPasswordOtpCode(value,userEmail);
+            if (res.error){
+                toast.dismiss(toastId);
+                return setErrMsg(res.error)
+            }
+            toast.success(res.message,{id:toastId})
+            router.push(`/reset-password?email=${encodeURIComponent(userEmail)}`);
+        }
+        catch(error){
+            toast.error('Something went wrong')
+        }
+    }
+
+    const handleResendOtp = async () => {
+        setIsResending(true);
+        const toastId = toast.loading('Resending OTP code...');
+        try {
+            const res = await generateResetPasswordOtpCode({email:userEmail})
+            if (res.error) {
+                toast.error(res.error || 'Failed to resend code', { id: toastId });
+                setIsResending(false);
+                return;
+            }
+            toast.success('A new code has been sent to your email', { id: toastId });
+            setErrMsg('');
+        } catch (error) {
+            toast.error('Something went wrong', { id: toastId });
+        } finally {
+            setIsResending(false);
+        }
     }
 
     return(
@@ -91,21 +132,43 @@ export default function VerifyCode(){
                             />
                         </div>
 
-                        <button
-                            type="submit"
-                            disabled={form.formState.isSubmitting}
-                            className="w-full mt-4 py-4 px-4 bg-teal-800 hover:bg-teal-900 text-white font-medium text-base rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 cursor-pointer"
-                        >
-                            {form.formState.isSubmitting ? (
-                                <>
-                                    <Loader2 size={20} className="animate-spin" />
-                                    <span>Verifying...</span>
-                                </>
-                            ) : (
-                                <span>Verify Code</span>
-                            )}
-                        </button>
+                        <div className="flex flex-col gap-3">
+                            <button
+                                type="submit"
+                                disabled={isSubmitting || !isDirty}
+                                className="w-full py-4 px-4 bg-teal-800 hover:bg-teal-900 text-white font-medium text-base rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 cursor-pointer"
+                            >
+                                {isSubmitting ? (
+                                    <>
+                                        <Loader2 size={20} className="animate-spin" />
+                                        <span>Verifying...</span>
+                                    </>
+                                ) : (
+                                    <span>Verify Code</span>
+                                )}
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={handleResendOtp}
+                                disabled={isResending}
+                                className="w-full py-3.5 px-4 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium text-sm rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 cursor-pointer"
+                            >
+                                {isResending ? (
+                                    <>
+                                        <Loader2 size={18} className="animate-spin" />
+                                        <span>Resending...</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <RefreshCcw size={18} />
+                                        <span>Resend Code</span>
+                                    </>
+                                )}
+                            </button>
+                        </div>
                     </form>
+                    {errorMsg && <p className="text-red-500 text-[0.85rem] mt-5">{errorMsg}</p>}
                 </div>
             </div>
         </div>

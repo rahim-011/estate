@@ -8,10 +8,17 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, Mail, Loader2 } from "lucide-react";
 import { FieldError } from "@/components/ui/field";
+import { generateResetPasswordOtpCode } from "@/lib/services/resetPassword.service";
+import { useState } from "react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { setErrorMap } from "zod/v3";
 
-type ForgotPasswordValue = z.infer<typeof forgotPasswordSchema>;
+export type ForgotPasswordValue = z.infer<typeof forgotPasswordSchema>;
 
 export default function ForgotPassword(){
+    const [errorMsg,setErrMsg] = useState('');
+    const router = useRouter();
 
     const form = useForm({
         resolver: zodResolver(forgotPasswordSchema),
@@ -19,9 +26,24 @@ export default function ForgotPassword(){
             email: ''
         }
     })
+    const {formState:{isSubmitting,isDirty}} = form;
 
     const onSubmit = async (value:ForgotPasswordValue)=>{
-
+        setErrMsg('');
+        const toastId = toast.loading('Reseting your password...');
+        try{
+            const res = await generateResetPasswordOtpCode(value);
+            if (res.error){
+                setErrMsg(res.error);
+                return;
+            }
+            toast.success(res.message,{id:toastId});
+            form.reset();
+            router.push(`/verify-code?email=${encodeURIComponent(value.email)}`);
+        }
+        catch(error){
+            setErrMsg('Something went wrong');
+        }
     }
 
     return(
@@ -88,10 +110,10 @@ export default function ForgotPassword(){
 
                         <button
                             type="submit"
-                            disabled={form.formState.isSubmitting}
+                            disabled={isSubmitting || !isDirty}
                             className="w-full mt-4 py-4 px-4 bg-teal-800 hover:bg-teal-900 text-white font-medium text-base rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 cursor-pointer"
                         >
-                            {form.formState.isSubmitting ? (
+                            {isSubmitting ? (
                                 <>
                                     <Loader2 size={20} className="animate-spin" />
                                     <span>Sending Code...</span>
@@ -101,6 +123,7 @@ export default function ForgotPassword(){
                             )}
                         </button>
                     </form>
+                    {errorMsg && <p className="text-red-500 text-[0.85rem] mt-4">{errorMsg}</p>}
                 </div>
             </div>
         </div>

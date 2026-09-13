@@ -33,6 +33,7 @@ export default function LoginForm() {
     });
 
     const onSubmit = async (values: LoginFormValues) => {
+        toast.dismiss();
         const toastId = toast.loading('Signing in ...');
         setErrorMsg('');
         const { email, password, rememberMe } = values;

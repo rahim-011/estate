@@ -9,14 +9,24 @@ import Image from "next/image";
 import { ArrowLeft, Lock, Loader2 } from "lucide-react";
 import { Input } from "@base-ui/react";
 import { FieldError } from "@/components/ui/field";
+import { useState } from "react";
+import { resetUserPassword } from "@/lib/services/resetPassword.service";
+import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 
 
 
 
-type ResetPasswordValues = z.infer<typeof resetPasswordSchema>;
+export type ResetPasswordValues = z.infer<typeof resetPasswordSchema>;
 
 export default function ResetPassword(){
-
+    const [errorMsg,setErrMsg] = useState('');
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const userEmail = searchParams.get('email');
+    if (!userEmail){
+        return null
+    }
     const form = useForm({
         resolver: zodResolver(resetPasswordSchema),
         defaultValues:{
@@ -26,7 +36,18 @@ export default function ResetPassword(){
     })
 
     const onSubmit = async(values: ResetPasswordValues) =>{
-        
+        const toastId = toast.loading('Changing your password ...')
+        try{
+            const res = await resetUserPassword(userEmail,values)
+            if (res.error){
+                return setErrMsg(res.error)
+            }
+            toast.success(res.message,{id:toastId});
+            router.push('/sign-in');
+        }
+        catch(error){
+            setErrMsg('Something went wrong');
+        }
     }
 
     return(
@@ -116,7 +137,7 @@ export default function ResetPassword(){
                                             />
                                         </div>
                                         {fieldState.invalid && (
-                                            <FieldError errors={[fieldState.error]} className="text-red-500 text-["/>
+                                            <FieldError errors={[fieldState.error]} className="!text-red-500 text-["/>
                                         )}
                                     </>
                                 )}
@@ -138,6 +159,7 @@ export default function ResetPassword(){
                             )}
                         </button>
                     </form>
+                    {errorMsg && <p className="text-red-500 text-[0.85rem] mt-4">{errorMsg}</p>}
                 </div>
             </div>
         </div>
